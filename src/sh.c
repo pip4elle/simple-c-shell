@@ -1,6 +1,60 @@
 #include "sh.h"
 
 
+char* sh_built_in_cmd_list[] = {
+    "help",
+    "cd",
+    "exit"
+};
+
+
+int (*sh_built_in_funcs[]) (char**) = {
+    &sh_cmd_help,
+    &sh_cmd_cd,
+    &sh_cmd_exit
+};
+
+
+int built_in_cmds_num() {
+    return sizeof(sh_built_in_cmd_list) / sizeof(char*);
+}
+
+
+int sh_cmd_help(char** args) {
+
+    printf("Built ins programs:\n\n");
+    
+    for(int i = 0; i < built_in_cmds_num(); i++)
+        printf("%s\n", sh_built_in_cmd_list[i]);
+    
+    printf("\nFor informations on external programs use man.\n");
+
+    return 1;
+}
+
+
+int sh_cmd_cd(char** args) {
+    
+    if(args[1] == NULL) {
+        fprintf(stderr, "ERROR: You must provide a path to cd.\n");
+        return 2;
+    }
+
+    if(chdir(args[1]) == -1) {
+        fprintf(stderr, "ERROR: Couldn't enter %s.\n", args[1]);
+        return 2;
+    }
+    
+    return 1;
+}
+
+
+int sh_cmd_exit(char** args) {
+    printf("EXIT");
+    return 0;
+}
+
+
 int sh_launch(char** args) {
 
     pid_t pid, wpid;
@@ -32,9 +86,15 @@ int sh_launch(char** args) {
 
 
 int sh_execute(char** args) {
-    
+
     if(args[0] == NULL)
         return 1;
+
+    for(int i = 0; i < built_in_cmds_num(); i++)
+        if(strcmp(args[0], sh_built_in_cmd_list[i]) == 0)
+            return (*sh_built_in_funcs[i])(args);
+    
+    return sh_launch(args);        
 }
 
 

@@ -16,3 +16,6 @@ char* sh_readline();
 char** sh_tokenize(char* line);
 int sh_execute(char** args);
 int sh_launch(char** args);
+int sh_cmd_help(char**);
+int sh_cmd_cd(char**);
+int sh_cmd_exit(char**);
