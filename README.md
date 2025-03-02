@@ -6,7 +6,7 @@ It includes:
 - **line parser**
 - **args tokenizer**
 - **built in functionalities (help, cd and exit)**
-- **command launcher**\
+- **command launcher**
 
 \
 This project was made for educational and learning purposes only, it's not anything near to a professional and utilizable shell.
